@@ -1,0 +1,30 @@
+# Dependencias y salidas generadas
+**/node_modules/
+**/.next/
+**/.vinext/
+**/dist/
+**/out/
+**/.wrangler/
+**/coverage/
+
+# Python
+**/__pycache__/
+**/*.py[cod]
+
+# Configuración local y secretos
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+**/*.key
+
+# Editores y sistema operativo
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Registros y temporales
+**/*.log
+**/*.tmp
+**/*~

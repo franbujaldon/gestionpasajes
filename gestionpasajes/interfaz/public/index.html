@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Interfaz académica para la gestión de pasajes con MongoDB">
+    <title>Gestión Pasajes · MongoDB</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar">
+        <div class="brand"><span class="brand-mark">GP</span><span><strong>Gestión Pasajes</strong><small>Empresa de larga distancia</small></span></div>
+        <nav class="main-nav" aria-label="Navegación principal">
+          <p>OPERACIONES</p>
+          <a class="active" href="#buscar" data-screen-link="buscar"><span>⌕</span> Buscar viajes</a>
+          <a href="#pasajes" data-screen-link="pasajes"><span>▣</span> Pasajes</a>
+          <a href="#pasajeros" data-screen-link="pasajeros"><span>◎</span> Pasajeros</a>
+          <p>ANÁLISIS</p>
+          <a href="#informes" data-screen-link="informes"><span>▥</span> Informes</a>
+          <a href="#indices" data-screen-link="indices"><span>⌁</span> Datos e índices</a>
+        </nav>
+        <div class="db-card"><span class="status-dot" id="db-status-dot"></span><div><strong id="db-status">Conectando…</strong><small id="db-name">gestionpasajes</small></div></div>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div><span class="eyebrow">OPERACIÓN DE VENTAS</span><h1>Buscar un viaje</h1></div>
+          <div class="topbar-actions"><span class="demo-badge">Base académica · 2026</span><button class="user-button" type="button" aria-label="Usuario de demostración">FM</button></div>
+        </header>
+
+        <div class="content">
+          <section class="screen active" id="buscar" data-screen="buscar">
+          <section class="search-panel" aria-label="Buscador de viajes">
+            <div class="search-heading"><div><span class="eyebrow light">NUEVO VIAJE</span><h2>¿A dónde querés viajar?</h2></div><span class="query-pill">elegí un origen y un destino</span></div>
+            <form class="search-grid" id="search-form">
+              <label><span>Origen</span><select id="origen" name="origen" required><option value="" selected disabled>Seleccionar origen</option></select></label>
+              <button class="swap-button" id="swap-route" type="button" aria-label="Intercambiar origen y destino">⇄</button>
+              <label><span>Destino</span><select id="destino" name="destino" required><option value="" selected disabled>Seleccionar destino</option></select></label>
+              <label><span>Fecha de salida</span><input id="fecha" name="fecha" type="date" value="2026-11-15" required></label>
+              <button class="primary-button" type="submit">Buscar viajes <span>→</span></button>
+            </form>
+          </section>
+
+          <section class="stats-row" aria-label="Resumen de datos">
+            <article><span>Viajes programados</span><strong id="stat-viajes">—</strong><small><span id="stat-recorridos">—</span> recorridos activos</small></article>
+            <article><span>Pasajes emitidos</span><strong id="stat-pasajes">—</strong><small>Online y boletería</small></article>
+            <article><span>Pasajeros</span><strong id="stat-pasajeros">—</strong><small>Con contacto registrado</small></article>
+          </section>
+
+          <section class="promotions-section" id="home-promos">
+            <div class="section-heading"><div><span class="eyebrow">BENEFICIOS PARA VIAJAR</span><h2>Ofertas y formas de pago</h2></div><p>Promociones de demostración para la aplicación.</p></div>
+            <div class="promo-grid">
+              <article class="promo-card promo-card-main">
+                <div><span class="promo-label">COMPRA ANTICIPADA</span><h3>15% menos en tu próximo viaje</h3><p>Reservá con al menos 7 días de anticipación y aprovechá una tarifa especial.</p></div>
+                <span class="promo-number">15<small>%</small></span>
+              </article>
+              <article class="promo-card promo-card-bank">
+                <span class="promo-icon">▰</span><div><span class="promo-label">BANCOS ADHERIDOS</span><h3>Hasta 6 cuotas sin interés</h3><p>Pagá con tarjetas seleccionadas de lunes a jueves.</p></div>
+              </article>
+              <article class="promo-card promo-card-club">
+                <span class="promo-icon">☆</span><div><span class="promo-label">BENEFICIO ONLINE</span><h3>10% extra desde la web</h3><p>Una ventaja para compras realizadas por el canal online.</p></div>
+              </article>
+            </div>
+            <div class="featured-heading"><div><span class="eyebrow">DESTINOS DESTACADOS</span><h2>Ideas para tu próxima salida</h2></div><span>Tarifas tomadas de la base de prueba</span></div>
+            <div class="destination-grid">
+              <article class="destination-card"><span class="destination-code">SJN</span><div><small>Desde Mendoza</small><h3>San Juan</h3><p>Desde <strong>$16.000</strong></p></div><button type="button" data-promo-origin="MDZ" data-promo-destination="SJN" data-promo-date="2026-11-15" aria-label="Buscar viajes a San Juan">→</button></article>
+              <article class="destination-card"><span class="destination-code">COR</span><div><small>Desde Mendoza</small><h3>Córdoba</h3><p>Desde <strong>$55.000</strong></p></div><button type="button" data-promo-origin="MDZ" data-promo-destination="COR" data-promo-date="2026-11-15" aria-label="Buscar viajes a Córdoba">→</button></article>
+              <article class="destination-card"><span class="destination-code">NQN</span><div><small>Desde Mendoza</small><h3>Neuquén</h3><p>Desde <strong>$52.000</strong></p></div><button type="button" data-promo-origin="MDZ" data-promo-destination="NQN" data-promo-date="2026-11-18" aria-label="Buscar viajes a Neuquén">→</button></article>
+            </div>
+          </section>
+
+          <section class="results-section" id="search-results" hidden>
+            <div class="section-heading"><div><span class="eyebrow">RESULTADOS</span><h2 id="route-title">Mendoza → Córdoba</h2></div><p id="results-summary"><strong>Consultando</strong> la base local…</p></div>
+            <div class="results-list" id="viajes-list" aria-live="polite"></div>
+          </section>
+          </section>
+
+          <section class="screen" id="pasajes" data-screen="pasajes" hidden>
+            <div class="page-heading"><div><span class="eyebrow">CONSULTA INDEXADA</span><h2>Buscar pasajes por documento</h2><p>La búsqueda usa el snapshot del pasajero guardado en cada pasaje.</p></div><span class="code-chip">ix_pasajes_documento_pasajero</span></div>
+            <form class="inline-search" id="ticket-search-form"><label><span>DNI, pasaporte o cédula</span><input id="ticket-dni" value="40111222" autocomplete="off" required></label><button class="primary-button" type="submit">Buscar pasajes</button></form>
+            <div class="data-panel" id="ticket-results"><div class="empty-state">Ingresá un documento para consultar sus pasajes.</div></div>
+          </section>
+
+          <section class="screen" id="pasajeros" data-screen="pasajeros" hidden>
+            <div class="page-heading"><div><span class="eyebrow">COLECCIÓN PASAJEROS</span><h2>Pasajeros registrados</h2><p>Datos personales y medios de contacto; no son cuentas de inicio de sesión.</p></div><span class="count-pill" id="passenger-count">— pasajeros</span></div>
+            <div class="data-panel table-wrap"><table><thead><tr><th>Pasajero</th><th>Documento</th><th>Correo</th><th>Teléfono</th><th>Estado</th></tr></thead><tbody id="passengers-body"></tbody></table></div>
+          </section>
+
+          <section class="screen" id="informes" data-screen="informes" hidden>
+            <div class="page-heading"><div><span class="eyebrow">AGGREGATION PIPELINE</span><h2>Informes de ventas</h2><p>Agrupaciones calculadas directamente sobre los 31 pasajes.</p></div><span class="code-chip">$group + $sum + $sort</span></div>
+            <div class="report-grid"><article class="data-panel"><h3>Recaudación por recorrido</h3><div id="route-report" class="bar-list"></div></article><article class="data-panel"><h3>Ventas por canal</h3><div id="channel-report" class="channel-list"></div></article></div>
+          </section>
+
+          <section class="screen" id="indices" data-screen="indices" hidden>
+            <div class="page-heading"><div><span class="eyebrow">MODELO FÍSICO</span><h2>Índices de la demostración</h2><p>Cada índice responde a una consulta concreta de la interfaz.</p></div><span class="code-chip">getIndexes()</span></div>
+            <div class="index-grid" id="index-grid"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+    <dialog class="seat-dialog" id="seat-dialog">
+      <div class="dialog-header"><div><span class="eyebrow">INVENTARIO EMBEBIDO</span><h2 id="seat-title">Seleccionar asiento</h2><p id="seat-subtitle"></p></div><button class="close-button" id="close-seats" type="button" aria-label="Cerrar">×</button></div>
+      <div class="seat-layout"><section><div class="seat-legend"><span><i class="available"></i> Disponible</span><span><i class="occupied"></i> Ocupado en este tramo</span></div><div id="seat-grid" class="seat-grid"></div></section><aside class="booking-card"><span class="eyebrow">RESERVA TEMPORAL</span><h3 id="selected-seat">Elegí un asiento</h3><p>La disponibilidad se controla por tramo mediante una actualización atómica.</p><form id="reserve-form"><label><span>DNI del pasajero</span><input id="reserve-dni" value="42555777" required></label><button class="primary-button" type="submit" disabled>Reservar por 10 minutos</button></form><div id="reserve-message" class="reserve-message"></div></aside></div>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
