@@ -8,6 +8,18 @@ demostración completa.
 El catálogo completo, con los campos **Filter**, **Project**, **Sort** y los
 pipelines listos para copiar, se encuentra en `CATALOGO_MY_QUERIES.md`.
 
+## Instalación automática
+
+Cerrar completamente Compass y ejecutar desde la carpeta `gestionpasajes`:
+
+```bash
+node scripts/14_instalar_myqueries_compass.js
+```
+
+El instalador detecta Compass y Compass Community en Windows, Linux y macOS.
+Después de ejecutarlo, volver a abrir Compass y entrar en **My Queries**. Si no
+hay Node.js disponible, usar el procedimiento manual de la sección siguiente.
+
 ## Cómo guardarlas
 
 1. Abrir la base `gestionpasajes` y la colección indicada.

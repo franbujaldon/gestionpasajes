@@ -16,6 +16,7 @@ Implementación inicial en MongoDB del sistema de gestión de pasajes de larga d
 - `scripts/10_series_temporales.js`: carga telemetría ficticia de tres viajes en `seguimientoviajes`.
 - `scripts/11_consultas_presentacion.js`: ejecuta diez consultas avanzadas de solo lectura para la exposición.
 - `scripts/12_verificacion_completa.js`: controla estructura, referencias, índices, plan de ejecución, GIS y serie temporal.
+- `scripts/14_instalar_myqueries_compass.js`: instala las consultas guardadas en Compass o Compass Community sobre Windows, Linux y macOS.
 - `consultas/GUIA_MY_QUERIES.md`: indica qué consultas guardar manualmente en My Queries de Compass.
 - `consultas/CATALOGO_MY_QUERIES.md`: contiene quince consultas completas, listas para copiar y guardar en Compass.
 - `scripts/13_verificacion_myqueries.js`: prueba los resultados e índices esperados del catálogo de My Queries.

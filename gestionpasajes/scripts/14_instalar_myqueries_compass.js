@@ -1,20 +1,48 @@
 #!/usr/bin/env node
 
 /**
- * Instala en MongoDB Compass 1.50 las consultas del catálogo del proyecto.
+ * Instala en MongoDB Compass las consultas del catálogo del proyecto.
  *
  * Compass guarda las consultas de Documents en FavoriteQueries y las de
  * Aggregations en SavedPipelines. El script es idempotente: conserva todo lo
- * que ya existe y no duplica una entrada que tenga el mismo nombre.
+ * que ya existe y no duplica una entrada que tenga el mismo nombre. Detecta
+ * las carpetas de Compass y Compass Community en Windows, Linux y macOS.
  */
 
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
 
-const compassData = path.join(os.homedir(), ".config", "MongoDB Compass");
-const favoriteDir = path.join(compassData, "FavoriteQueries");
-const pipelineDir = path.join(compassData, "SavedPipelines");
+function compassDirectories() {
+  let parent;
+
+  if (process.platform === "win32") {
+    parent = process.env.APPDATA;
+  } else if (process.platform === "darwin") {
+    parent = path.join(os.homedir(), "Library", "Application Support");
+  } else {
+    parent = process.env.XDG_CONFIG_HOME || path.join(os.homedir(), ".config");
+  }
+
+  if (!parent) {
+    throw new Error("No se pudo localizar la carpeta de configuración del usuario.");
+  }
+
+  const candidates = [
+    path.join(parent, "MongoDB Compass"),
+    path.join(parent, "MongoDB Compass Community"),
+  ];
+  const existing = candidates.filter((directory) => fs.existsSync(directory));
+
+  if (existing.length === 0) {
+    throw new Error(
+      `No se encontró la configuración de Compass. Abrí Compass una vez y volvé a ejecutar el script. Rutas verificadas: ${candidates.join(", ")}`
+    );
+  }
+
+  return existing;
+}
+
 const host = "localhost:27017";
 const savedAt = "2026-10-23T20:45:00.000Z";
 const lastModified = Date.parse(savedAt);
@@ -406,12 +434,21 @@ function install(directory, entries, nameField, idField) {
   return { created, skipped };
 }
 
-const favoriteResult = install(favoriteDir, favoriteQueries, "_name", "_id");
-const pipelineResult = install(pipelineDir, savedPipelines, "name", "id");
-
-console.log(JSON.stringify({
-  favoriteQueries: favoriteResult,
-  savedPipelines: pipelineResult,
-  totalVisibleInMyQueries: favoriteQueries.length + savedPipelines.length,
+const installations = compassDirectories().map((compassData) => ({
   compassData,
-}, null, 2));
+  favoriteQueries: install(
+    path.join(compassData, "FavoriteQueries"),
+    favoriteQueries,
+    "_name",
+    "_id"
+  ),
+  savedPipelines: install(
+    path.join(compassData, "SavedPipelines"),
+    savedPipelines,
+    "name",
+    "id"
+  ),
+  totalVisibleInMyQueries: favoriteQueries.length + savedPipelines.length,
+}));
+
+console.log(JSON.stringify({ installations }, null, 2));
